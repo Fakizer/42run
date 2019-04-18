@@ -15,10 +15,11 @@ INC_PATH = ./includes/ \
 			# $(LIB_PATH)glfw/deps/ \
 			# $(LIB_PATH)glad/include/KHR
 
-GCC_FLGS = -Werror -Wextra -Wall -pedantic -g3
+GCC_FLGS = -Werror -Wextra -Wall -pedantic -g3 
+CPP_FLGS += -Wno-c++11-extensions
 GCC_LIBS = -lglfw3 -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo
 
-SYSCONF_LINK = clang++
+SYSCONF_LINK = g++
 LDFLAGS      = -O3 
 LIB_NAME 	= glfw/src
 INC 		= $(addprefix -I,$(INC_PATH))
@@ -42,10 +43,10 @@ obj_dir:
 		mkdir $(OBJ_PATH)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp
-		$(SYSCONF_LINK) $(CPPFLAGS) -c $< -o $@ $(INC)
+		$(SYSCONF_LINK) $(GCC_FLGS) $(CPP_FLGS) -c $< -o $@ $(INC)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-		gcc $(CPPFLAGS) -c $< -o $@ $(INC)
+		gcc $(GCC_FLGS) -c $< -o $@ $(INC)
 
 clean:
 		rm -f $(object)
