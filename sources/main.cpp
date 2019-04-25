@@ -58,7 +58,9 @@ void	looper(void)
 int main(void) {
     std::cout << "ky" << std::endl;
     GLFWwindow* window;
+    GLFW_manager manager;
 
+    manager.run_manager();
     const int width = 1280, height = 1024;
     setup_window(window, width, height);
     while (!glfwWindowShouldClose(window))

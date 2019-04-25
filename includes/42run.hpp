@@ -8,4 +8,6 @@
 // #include <OpenGL/gl.h>
 #include <GLFW/glfw3.h>
 
+#include "GLFW_manager.hpp"
+
 #endif

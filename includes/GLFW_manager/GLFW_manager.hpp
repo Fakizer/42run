@@ -1,26 +1,30 @@
-#ifndef GLFW_MANAGER_HPP
-# define GLFW_MANAGER_HPP
+#ifndef GLFW_manager_HPP
+# define GLFW_manager_HPP
+
+#define __gl3_h_
+
+# define THIS_GLFW static_cast<GLFW_manager *>(glfwGetWindowUserPointer(win))
 
 # include <glad/glad.h>
 # include <GLFW/glfw3.h>
 // # include "OpenGL/oGL_module.hpp"
-// # include "Input.hpp"
-// # include "Window.hpp"
-// # include "Gamepad.hpp"
-// # include "Exceptions/GeneralException.hpp"
+# include "GLFW_input.hpp"
+# include "GLFW_window.hpp"
+# include "GLFW_controller.hpp"
+# include "Exeptions_42run.hpp"
 # include <cfenv>
 # include <iostream>
 # include <sstream>
 # include <iomanip>
 
-class Glfw_manager
+class GLFW_manager
 {
 	public :
 
-		Glfw_manager(void);
-		virtual ~Glfw_manager(void);
-		Glfw_manager(Glfw_manager const &src) = delete;
-		Glfw_manager &operator=(Glfw_manager const &rhs) = delete;
+		GLFW_manager(void);
+		virtual ~GLFW_manager(void);
+		GLFW_manager(GLFW_manager const &src) = delete;
+		GLFW_manager &operator=(GLFW_manager const &rhs) = delete;
 
 		static void run_manager(void);
 		static void close_manager(void);
@@ -31,9 +35,9 @@ class Glfw_manager
 
 		static size_t getActiveWindowNumber(void);
 		static float getTime(void);
-		Input const &getInput(void) const;
+		GLFW_input const &getGLFW_input(void) const;
 		GLFW_Window const &getWindow(void) const;
-		Gamepad &getGamepad(void);
+		GLFW_controller &getGamepad(void);
 		std::string const &getStrFps(void) const;
 		bool getMouseMode(void) const;
 
@@ -57,7 +61,7 @@ class Glfw_manager
 		void disableVsync(void);
 		void enableVsync(void);
 
-		class InitFailException : public GeneralException
+		class InitFailException : public Exeptions_42run
 		{
 			public :
 
@@ -65,7 +69,7 @@ class Glfw_manager
 				virtual ~InitFailException(void) throw();
 		};
 
-		class WindowFailException : public GeneralException
+		class WindowFailException : public Exeptions_42run
 		{
 			public :
 
@@ -73,7 +77,7 @@ class Glfw_manager
 				virtual ~WindowFailException(void) throw();
 		};
 
-		class FileOpenException : public GeneralException
+		class FileOpenException : public Exeptions_42run
 		{
 			public :
 
@@ -85,14 +89,14 @@ class Glfw_manager
 	private :
 
 
-		Input       _input;
-		GLFW_Window _window;
-		std::string _win_name;
-		float       _last_time;
-		float       _last_fps_time;
-		size_t      _nb_frame;
-		std::string _str_fps;
-		Gamepad     _gamepad;
+		GLFW_input  		_input;
+		GLFW_Window 		_window;
+		std::string 		_win_name;
+		float       		_last_time;
+		float       		_last_fps_time;
+		size_t      		_nb_frame;
+		std::string			_str_fps;
+		GLFW_controller		_gamepad;
 
 		static size_t _nb_active_win;
 

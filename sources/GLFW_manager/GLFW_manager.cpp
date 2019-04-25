@@ -1,16 +1,16 @@
 #include "GLFW_manager.hpp"
 
-Glfw_manager::Glfw_manager(void) : _input(), _window(), _last_time(0.0f),
+GLFW_manager::GLFW_manager(void) : _input(), _window(), _last_time(0.0f),
 								   _last_fps_time(0.0f), _nb_frame(0), _str_fps("60.0"),
 								   _gamepad(1)
 {
 }
 
-Glfw_manager::~Glfw_manager(void)
+GLFW_manager::~GLFW_manager(void)
 {
 }
 
-void Glfw_manager::run_manager(void)
+void GLFW_manager::run_manager(void)
 {
 	auto error_callback = [](int error, char const *what)
 	{
@@ -20,10 +20,10 @@ void Glfw_manager::run_manager(void)
 
 	glfwSetErrorCallback(error_callback);
 	if (glfwInit() != GLFW_TRUE)
-		throw Glfw_manager::InitFailException();
+		throw GLFW_manager::InitFailException();
 }
 
-void Glfw_manager::close_manager(void)
+void GLFW_manager::close_manager(void)
 {
 	glfwTerminate();
 }
@@ -32,37 +32,37 @@ void Glfw_manager::close_manager(void)
  * Getter
  */
 
-size_t Glfw_manager::getActiveWindowNumber(void)
+size_t GLFW_manager::getActiveWindowNumber(void)
 {
 	return (_nb_active_win);
 }
 
-float Glfw_manager::getTime(void)
+float GLFW_manager::getTime(void)
 {
 	return (static_cast<float>(glfwGetTime()));
 }
 
-Input const &Glfw_manager::getInput(void) const
+GLFW_input const &GLFW_manager::getGLFW_input(void) const
 {
 	return (this->_input);
 }
 
-GLFW_Window const &Glfw_manager::getWindow(void) const
+GLFW_Window const &GLFW_manager::getWindow(void) const
 {
 	return (this->_window);
 }
 
-Gamepad &Glfw_manager::getGamepad(void)
+GLFW_controller &GLFW_manager::getGamepad(void)
 {
 	return (this->_gamepad);
 }
 
-std::string const &Glfw_manager::getStrFps(void) const
+std::string const &GLFW_manager::getStrFps(void) const
 {
 	return (this->_str_fps);
 }
 
-bool Glfw_manager::getMouseMode(void) const
+bool GLFW_manager::getMouseMode(void) const
 {
 	return (this->_input.mouse_exclusive);
 }
@@ -71,7 +71,7 @@ bool Glfw_manager::getMouseMode(void) const
  * Other
  */
 
-void Glfw_manager::create_resizable_window(std::string const &name, int major, int minor,
+void GLFW_manager::create_resizable_window(std::string const &name, int major, int minor,
 										   int w, int h)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
@@ -89,7 +89,7 @@ void Glfw_manager::create_resizable_window(std::string const &name, int major, i
 											   NULL)) == NULL)
 	{
 		this->_window.win = nullptr;
-		throw Glfw_manager::WindowFailException();
+		throw GLFW_manager::WindowFailException();
 	}
 	this->_win_name         = name;
 	this->_window.cur_win_h = h;
@@ -103,13 +103,13 @@ void Glfw_manager::create_resizable_window(std::string const &name, int major, i
 	glfwMakeContextCurrent(this->_window.win);
 	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
 	{
-		throw Glfw_manager::WindowFailException();
+		throw GLFW_manager::WindowFailException();
 	}
 	glfwSwapInterval(0);
 	_nb_active_win++;
 }
 
-void Glfw_manager::destroy_window(void)
+void GLFW_manager::destroy_window(void)
 {
 	if (this->_window.win != nullptr)
 	{
@@ -119,7 +119,7 @@ void Glfw_manager::destroy_window(void)
 	}
 }
 
-void Glfw_manager::init_input_callback(void)
+void GLFW_manager::init_input_callback(void)
 {
 	auto keyboard_callback = [](GLFWwindow *win, int key, int scancode,
 								int action, int mods)
@@ -174,7 +174,7 @@ void Glfw_manager::init_input_callback(void)
 	glfwSetCursorPosCallback(this->_window.win, cursor_position_callback);
 }
 
-void Glfw_manager::update_events(void)
+void GLFW_manager::update_events(void)
 {
 	float time;
 	float delta_time;
@@ -189,27 +189,27 @@ void Glfw_manager::update_events(void)
 		this->_input.timer += delta_time;
 }
 
-void Glfw_manager::swap_buffers(void)
+void GLFW_manager::swap_buffers(void)
 {
 	this->_window.resized        = false;
 	this->_input.mouse_refreshed = false;
 	glfwSwapBuffers(this->_window.win);
 }
 
-bool Glfw_manager::should_window_be_closed(void)
+bool GLFW_manager::should_window_be_closed(void)
 {
 	if (!glfwWindowShouldClose(this->_window.win))
 		return (false);
 	return (true);
 }
 
-void Glfw_manager::update_title(std::string const &name)
+void GLFW_manager::update_title(std::string const &name)
 {
 	this->_win_name = name;
 	glfwSetWindowTitle(this->_window.win, name.c_str());
 }
 
-void Glfw_manager::update_title_fps(void)
+void GLFW_manager::update_title_fps(void)
 {
 	std::string str;
 
@@ -217,7 +217,7 @@ void Glfw_manager::update_title_fps(void)
 	glfwSetWindowTitle(this->_window.win, str.c_str());
 }
 
-void Glfw_manager::calculate_fps(void)
+void GLFW_manager::calculate_fps(void)
 {
 	(this->_nb_frame)++;
 	if ((glfwGetTime() - this->_last_fps_time) > 1.0f)
@@ -228,13 +228,13 @@ void Glfw_manager::calculate_fps(void)
 	}
 }
 
-void Glfw_manager::reset_fps_counter(void)
+void GLFW_manager::reset_fps_counter(void)
 {
 	this->_nb_frame      = 0;
 	this->_last_fps_time = glfwGetTime();
 }
 
-void Glfw_manager::toogle_mouse_exclusive(void)
+void GLFW_manager::toogle_mouse_exclusive(void)
 {
 	this->_input.mouse_exclusive = !this->_input.mouse_exclusive;
 	(this->_input.mouse_exclusive) ? glfwSetInputMode(this->_window.win, GLFW_CURSOR,
@@ -244,22 +244,22 @@ void Glfw_manager::toogle_mouse_exclusive(void)
 	this->_input.timer = 0.0f;
 }
 
-void Glfw_manager::triggerWindowClose(void)
+void GLFW_manager::triggerWindowClose(void)
 {
 	glfwSetWindowShouldClose(this->_window.win, GLFW_TRUE);
 }
 
-void Glfw_manager::disableVsync(void)
+void GLFW_manager::disableVsync(void)
 {
 	glfwSwapInterval(0);
 }
 
-void Glfw_manager::enableVsync(void)
+void GLFW_manager::enableVsync(void)
 {
 	glfwSwapInterval(1);
 }
 
-void Glfw_manager::_window_creation_callback_setup(void)
+void GLFW_manager::_window_creation_callback_setup(void)
 {
 	auto close_callback = [](GLFWwindow *win)
 	{
@@ -285,38 +285,38 @@ void Glfw_manager::_window_creation_callback_setup(void)
 	glfwSetFramebufferSizeCallback(this->_window.win, framebuffer_size_callback);
 }
 
-Glfw_manager::InitFailException::InitFailException(void)
+GLFW_manager::InitFailException::InitFailException(void)
 {
 	this->_msg = "GLFW : Initilization failed !";
 }
 
-Glfw_manager::InitFailException::~InitFailException(void) throw()
+GLFW_manager::InitFailException::~InitFailException(void) throw()
 {
 }
 
-Glfw_manager::WindowFailException::WindowFailException(void)
+GLFW_manager::WindowFailException::WindowFailException(void)
 {
 	this->_msg = "GLFW : Window creation failed !";
 }
 
 
-Glfw_manager::WindowFailException::~WindowFailException(void) throw()
+GLFW_manager::WindowFailException::~WindowFailException(void) throw()
 {
 }
 
-Glfw_manager::FileOpenException::FileOpenException(std::string const &path)
+GLFW_manager::FileOpenException::FileOpenException(std::string const &path)
 {
-	this->_msg = "Glfw_manager : Failed to find to open file : ";
+	this->_msg = "GLFW_manager : Failed to find to open file : ";
 	this->_msg += path.c_str();
 }
 
-Glfw_manager::FileOpenException::FileOpenException(void)
+GLFW_manager::FileOpenException::FileOpenException(void)
 {
-	this->_msg = "Glfw_manager : Failed to find to open file";
+	this->_msg = "GLFW_manager : Failed to find to open file";
 }
 
-Glfw_manager::FileOpenException::~FileOpenException(void) throw()
+GLFW_manager::FileOpenException::~FileOpenException(void) throw()
 {
 }
 
-size_t        Glfw_manager::_nb_active_win = 0;
+size_t        GLFW_manager::_nb_active_win = 0;
